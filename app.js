@@ -26,7 +26,7 @@ db.once('open', () => {
 app.use(express.static('public'))
 
 const Restaurant = require('./models/restaurant');
-const restaurant = require('./models/restaurant');
+
 
 // 設定首頁路由
 app.get('/', (req, res) => {
@@ -41,8 +41,8 @@ app.get('/restaurants/new', (req, res) => {
   return res.render('new')
 })
 app.post('/restaurants', (req, res) => {
-  const newone = Object.assign(req.body)       // 從 req.body 拿出表單裡的 name 資料
-  return Restaurant.create(newone)     // 存入資料庫
+  const newOne = Object.assign(req.body)       // 從 req.body 拿出表單裡的 name 資料
+  return Restaurant.create(newOne)     // 存入資料庫
     .then(() => res.redirect('/')) // 新增完成後導回首頁
     .catch(error => console.log(error))
 })

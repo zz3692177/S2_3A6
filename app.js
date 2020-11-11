@@ -37,7 +37,15 @@ app.get('/', (req, res) => {
     })
     .catch(error => console.log(error))
 })
-
+app.get('/restaurants/new', (req, res) => {
+  return res.render('new')
+})
+app.post('/restaurants', (req, res) => {
+  const newone = Object.assign(req.body)       // 從 req.body 拿出表單裡的 name 資料
+  return Restaurant.create(newone)     // 存入資料庫
+    .then(() => res.redirect('/')) // 新增完成後導回首頁
+    .catch(error => console.log(error))
+})
 app.get('/restaurants/:id', (req, res) => {
   const id = req.params.id
   return Restaurant.findById(id)
@@ -66,12 +74,9 @@ app.get('/restaurants/:id/edit', (req, res) => {
 
 app.post('/restaurants/:id/edit', (req, res) => {
   const id = req.params.id
-  console.log("get in")
   return Restaurant.findById(id)
     .then(restaurant => {
-      console.log("get in2")
       restaurant = Object.assign(restaurant, req.body)
-      console.log(req.body.name)
       return restaurant.save()
       res.redirect(`/resturants/${id}`)
     })
@@ -86,6 +91,8 @@ app.post('/restaurants/:id/delete', (req, res) => {
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
+
+
 // 設定 port 3000
 app.listen(3000, () => {
   console.log('App is running on http://localhost:3000')

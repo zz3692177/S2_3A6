@@ -11,5 +11,5 @@ const restaurants = require('./modules/restaurants')
 router.use('/restaurants', restaurants)
 
 const sort = require('./modules/sort')
-router.use('/', sort)
+router.use('/sorts', sort)
 module.exports = router

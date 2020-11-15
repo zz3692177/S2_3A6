@@ -4,7 +4,6 @@ const router = express.Router()
 const Restaurant = require('../../models/restaurant')
 
 router.get('/', (req, res) => {
-  console.log(req.body)
   Restaurant.find()
     .lean()
     .then(restaurants => {

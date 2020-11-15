@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../../models/restaurant')
-
+const bodyParser = require('body-parser')
 router.get('/new', (req, res) => {
   return res.render('new')
 })
@@ -35,9 +35,10 @@ router.put('/:id', (req, res) => {
     .then(restaurant => {
       restaurant = Object.assign(restaurant, req.body)
       return restaurant.save()
-      res.redirect(`/resturants/${id}`)
     })
-    .then(() => res.redirect(`/resturants/${id}`))
+    .then(() => {
+      res.redirect(`./${id}`)
+    })
     .catch(error => console.log(error))
 })
 

@@ -7,6 +7,7 @@ const mongoose = require('mongoose') // 載入 mongoose
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override')
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main', extname: '.handlebars' }))
 app.set('view engine', 'handlebars')
@@ -24,6 +25,7 @@ db.once('open', () => {
 })
 
 app.use(express.static('public'))
+app.use(methodOverride('_method'))
 
 const Restaurant = require('./models/restaurant');
 

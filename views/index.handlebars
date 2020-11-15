@@ -46,7 +46,7 @@
                 <a type="button" class="btn btn-outline-secondary btn-sm"
                   href="./restaurants/{{ this._id }}/edit">Edit</a>
                 <!-- 加入這行 -->
-                <form action="./restaurants/{{ this._id }}/delete" method="POST" style="display: inline;">
+                <form action="./restaurants/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;">
                   <button type="submit" class="btn btn-outline-danger btn-sm">delete</button>
                 </form>
               </div>

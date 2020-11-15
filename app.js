@@ -7,7 +7,16 @@ const mongoose = require('mongoose') // 載入 mongoose
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 const exphbs = require('express-handlebars');
+// 載入 method-override
 const methodOverride = require('method-override')
+// 設定每一筆請求都會透過 methodOverride 進行前置處理
+app.use(methodOverride('_method'))
+
+// 引用路由器
+const routes = require('./routes')
+
+
+
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main', extname: '.handlebars' }))
 app.set('view engine', 'handlebars')
@@ -25,74 +34,76 @@ db.once('open', () => {
 })
 
 app.use(express.static('public'))
-app.use(methodOverride('_method'))
+
+// 將 request 導入路由器
+app.use(routes)
 
 const Restaurant = require('./models/restaurant');
 
 
 // 設定首頁路由
-app.get('/', (req, res) => {
-  Restaurant.find()
-    .lean()
-    .then(restaurants => {
-      res.render('index', { restaurants })
-    })
-    .catch(error => console.log(error))
-})
-app.get('/restaurants/new', (req, res) => {
-  return res.render('new')
-})
-app.post('/restaurants', (req, res) => {
-  const newOne = Object.assign(req.body)       // 從 req.body 拿出表單裡的 name 資料
-  return Restaurant.create(newOne)     // 存入資料庫
-    .then(() => res.redirect('/')) // 新增完成後導回首頁
-    .catch(error => console.log(error))
-})
-app.get('/restaurants/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .lean()
-    .then(restaurant => { res.render('show', { restaurant }) })
-    .catch(error => console.log(error))
-})
+// app.get('/', (req, res) => {
+//   Restaurant.find()
+//     .lean()
+//     .then(restaurants => {
+//       res.render('index', { restaurants })
+//     })
+//     .catch(error => console.log(error))
+// })
+// app.get('/restaurants/new', (req, res) => {
+//   return res.render('new')
+// })
+// app.post('/restaurants', (req, res) => {
+//   const newOne = Object.assign(req.body)       // 從 req.body 拿出表單裡的 name 資料
+//   return Restaurant.create(newOne)     // 存入資料庫
+//     .then(() => res.redirect('/')) // 新增完成後導回首頁
+//     .catch(error => console.log(error))
+// })
+// app.get('/restaurants/:id', (req, res) => {
+//   const id = req.params.id
+//   return Restaurant.findById(id)
+//     .lean()
+//     .then(restaurant => { res.render('show', { restaurant }) })
+//     .catch(error => console.log(error))
+// })
 
-app.post('/restaurants/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .lean()
-    .then(restaurant => { res.render('show', { restaurant }) })
-    .catch(error => console.log(error))
-})
-
-
-app.get('/restaurants/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .lean()
-    .then((restaurant) => res.render('edit', { restaurant }))
-    .catch(error => console.log(error))
-})
+// app.post('/restaurants/:id', (req, res) => {
+//   const id = req.params.id
+//   return Restaurant.findById(id)
+//     .lean()
+//     .then(restaurant => { res.render('show', { restaurant }) })
+//     .catch(error => console.log(error))
+// })
 
 
-app.post('/restaurants/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .then(restaurant => {
-      restaurant = Object.assign(restaurant, req.body)
-      return restaurant.save()
-      res.redirect(`/resturants/${id}`)
-    })
-    .then(() => res.redirect(`/resturants/${id}`))
-    .catch(error => console.log(error))
-})
+// app.get('/restaurants/:id/edit', (req, res) => {
+//   const id = req.params.id
+//   return Restaurant.findById(id)
+//     .lean()
+//     .then((restaurant) => res.render('edit', { restaurant }))
+//     .catch(error => console.log(error))
+// })
 
-app.post('/restaurants/:id/delete', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .then(restaurant => restaurant.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
+
+// app.put('/:id', (req, res) => {
+//   const id = req.params.id
+//   return Restaurant.findById(id)
+//     .then(restaurant => {
+//       restaurant = Object.assign(restaurant, req.body)
+//       return restaurant.save()
+//       res.redirect(`/resturants/${id}`)
+//     })
+//     .then(() => res.redirect(`/resturants/${id}`))
+//     .catch(error => console.log(error))
+// })
+
+// app.delete('/restaurants/:id/delete', (req, res) => {
+//   const id = req.params.id
+//   return Restaurant.findById(id)
+//     .then(restaurant => restaurant.remove())
+//     .then(() => res.redirect('/'))
+//     .catch(error => console.log(error))
+// })
 
 
 // 設定 port 3000
